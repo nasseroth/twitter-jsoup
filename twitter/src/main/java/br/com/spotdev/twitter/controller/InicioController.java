@@ -2,16 +2,13 @@ package br.com.spotdev.twitter.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.http.ResponseEntity;
@@ -77,18 +74,17 @@ public class InicioController {
 				    		+ "0af1e29ea8e6c7")
 					.cookie("_ga", "GA1.2.350501248.1613515134")
 					.cookie("_gid", "GA1.2.1905327451.1613515134")
-				    .ignoreContentType(true)
+				    //.ignoreContentType(true)
 				    .proxy("127.0.0.1", 8080)
 				    .ignoreHttpErrors(true)
 				    .ignoreContentType(true)
 				    .get();
 			log.add("inicio");
-			System.out.println("ini");
-			log.add("> " + doc2.data());
-			System.out.println(doc2);
-			System.out.println("fim");
+			JSONObject myObject = new JSONObject(doc2.select("body").text());
+			log.add(myObject.toString());
 			log.add("final");
 			Files.write(Paths.get(arquivo.getPath()), log, StandardOpenOption.APPEND);
+			return ResponseEntity.ok().body(myObject.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
